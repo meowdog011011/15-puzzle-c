@@ -180,7 +180,18 @@ void print_title_and_gameboard(void)
             // otherwise, print digit
             else
             {
+
+                // if digit is in right spot, use green text color
+                if (grid[i][i2] == 4 * i + i2 + 1)
+                {
+                    printf("\033[32m");
+                }
+
+                // print digit
                 printf("%d ", grid[i][i2]);
+
+                // reset color anyway
+                printf("\033[97m");
             }
 
             // print padding
