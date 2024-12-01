@@ -179,7 +179,7 @@ void print_title_and_gameboard(void)
 {
 
     // string to print
-    char title_and_gameboard[1000] = "15 Puzzle\nMade by Te Du.\nVersion 1.0.0\nCopyright (c) 2024 \u03A3igma Studios\n\n";
+    char title_and_gameboard[1000] = "15 Puzzle\nMade by Te Du.\nVersion 1.1.0\nCopyright (c) 2024 \u03A3igma Studios\n\n";
     
     // loop through rows
     for (int i = 0; i <= 3; i++)
