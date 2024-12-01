@@ -17,6 +17,7 @@ int random(int min, int max)
 }
 
 /* checks if number is in array
+   returns:
    1 is yes, 0 is no */
 int number_in_array(int number, int array[], int array_length)
 {
@@ -52,6 +53,7 @@ int quit(void)
 int grid[4][4] = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 0}};
 
 /* checks if grid is finished
+   returns:
    1 is yes, 0 is no */
 int check_grid(void)
 {
@@ -67,10 +69,14 @@ int check_grid(void)
     }
 }
 
-/* simulates a move 
+/* simulates a move
+   direction:
    0 is up, 1 is down,
-   2 is left, 3 is right */
-void move(int direction)
+   2 is left, 3 is right
+   returns:
+   0 is successful,
+   1 is not */
+int move(int direction)
 {
 
     // blank coordinates
@@ -100,8 +106,12 @@ void move(int direction)
             {
                 grid[blank[0]][blank[1]] = grid[blank[0] + 1][blank[1]];
                 grid[blank[0] + 1][blank[1]] = 0;
+                break;
             }
-            break;
+            else
+            {
+                return 1;
+            }
         
         // down
 
@@ -110,8 +120,12 @@ void move(int direction)
             {
                 grid[blank[0]][blank[1]] = grid[blank[0] - 1][blank[1]];
                 grid[blank[0] - 1][blank[1]] = 0;
+                break;
             }
-            break;
+            else
+            {
+                return 1;
+            }
         
         // left
         case 2:
@@ -119,8 +133,12 @@ void move(int direction)
             {
                 grid[blank[0]][blank[1]] = grid[blank[0]][blank[1] + 1];
                 grid[blank[0]][blank[1] + 1] = 0;
+                break;
             }
-            break;
+            else
+            {
+                return 1;
+            }
         
         // right
         case 3:
@@ -128,17 +146,23 @@ void move(int direction)
             {
                 grid[blank[0]][blank[1]] = grid[blank[0]][blank[1] - 1];
                 grid[blank[0]][blank[1] - 1] = 0;
+                break;
             }
-            break;
+            else
+            {
+                return 1;
+            }
         
         // invalid input
         default:
-            break;
+            return 1;
     }
+
+    return 0;
 }
 
 /* shuffles grid */
-void shuffle_grid()
+void shuffle_grid(void)
 {
     
     // do 500 random moves
@@ -154,61 +178,66 @@ void shuffle_grid()
 void print_title_and_gameboard(void)
 {
 
-    // print title
-    printf("15 Puzzle\nMade by Te Du.\nVersion 1.0.0\nCopyright (c) 2024 \u03A3igma Studios\n\n");
+    // string to print
+    char title_and_gameboard[1000] = "15 Puzzle\nMade by Te Du.\nVersion 1.0.0\nCopyright (c) 2024 \u03A3igma Studios\n\n";
     
     // loop through rows
     for (int i = 0; i <= 3; i++)
     {
 
-        // print row border
-        printf("\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\n");
+        // add row border
+        strcat(title_and_gameboard, "\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\n");
 
         // loop through squares in row
         for (int i2 = 0; i2 <= 3; i2++)
         {
 
-            // print border
-            printf("\u2588 ");
+            // add left border
+            strcat(title_and_gameboard, "\u2588 ");
 
-            // if 0 (blank), print two spaces
+            // if 0 (blank), add two spaces
             if (grid[i][i2] == 0)
             {
-                printf("  ");
+                strcat(title_and_gameboard, "  ");
             }
 
-            // otherwise, print digit
+            // otherwise
             else
             {
 
                 // if digit is in right spot, use green text color
                 if (grid[i][i2] == 4 * i + i2 + 1)
                 {
-                    printf("\033[32m");
+                    strcat(title_and_gameboard, "\033[32m");
                 }
 
-                // print digit
-                printf("%d ", grid[i][i2]);
+                // add digit
+                char digit[3];
+                sprintf(digit, "%d ", grid[i][i2]);
+                strcat(title_and_gameboard, digit);
 
                 // reset color anyway
-                printf("\033[97m");
+                strcat(title_and_gameboard, "\033[97m");
             }
 
-            // print padding
+            // add padding
             char gridNum[3];
             sprintf(gridNum, "%d", grid[i][i2]);
             if (strlen(gridNum) == 1)
             {
-                printf(" ");
+                strcat(title_and_gameboard, " ");
             }
         }
 
-        // print right border
-        printf("\u2588\n");
+        // add right border
+        strcat(title_and_gameboard, "\u2588\n");
     }
 
-    // print bottom border
-    printf("\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\n");
+    // add bottom border
+    strcat(title_and_gameboard, "\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\n");
+
+    // print full string
+    printf(title_and_gameboard);
 }
 
 /* clears screen and then prints
@@ -262,6 +291,9 @@ int main(void)
         if (option != 27)
         {
 
+            // start time
+            time_t start_time = time(NULL);
+
             // number of moves
             int moves = 0;
 
@@ -272,7 +304,7 @@ int main(void)
                 refresh_screen();
 
                 // prompt for move
-                printf("\n%d moves\n\nUse arrow keys to move the tiles or press ESC to exit: ", moves);
+                printf("\n%d moves\n\n%ld seconds\n\nUse arrow keys to move the tiles or press ESC to exit: ", moves, time(NULL) - start_time);
                 option = getch();
 
                 // if it is a special key, getch returns special codes
@@ -314,7 +346,10 @@ int main(void)
                     }
 
                     // move
-                    move(option);
+                    if (move(option))
+                    {
+                        moves--;
+                    }
                 }
 
                 // if user wants to exit
@@ -332,6 +367,10 @@ int main(void)
             // print congratulation message
             printf("\nCongrats, you won!");
             usleep(1000000);
+            printf("\n\nMoves: %d", moves);
+            usleep(1000000);
+            printf("\n\nTime: %ld seconds", time(NULL) - start_time);
+            usleep(3000000);
         }
     }
 
