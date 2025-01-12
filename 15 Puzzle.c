@@ -174,12 +174,16 @@ void shuffle_grid(void)
 
 //// CONSOLE FUNCTIONS ////
 
-/* prints title and gameboard */
-void print_title_and_gameboard(void)
+/* clears screen and then prints
+   title and gameboard */
+void refresh_screen(void)
 {
 
+    // ANSI escape codes
+    printf("\033[H\033[J");
+
     // string to print
-    char title_and_gameboard[1000] = "15 Puzzle\nMade by Te Du.\nVersion 1.1.0\nCopyright (c) 2024 \u03A3igma Studios\n\n";
+    char title_and_gameboard[1000] = "15 Puzzle\nVersion 1.1.1\nCopyright (c) 2025 Te Du\n\n";
     
     // loop through rows
     for (int i = 0; i <= 3; i++)
@@ -240,18 +244,6 @@ void print_title_and_gameboard(void)
     printf(title_and_gameboard);
 }
 
-/* clears screen and then prints
-   title and gameboard */
-void refresh_screen(void)
-{
-
-    // ANSI escape codes
-    printf("\033[H\033[J");
-
-    // print title & gameboard
-    print_title_and_gameboard();
-}
-
 //// MAIN ////
 
 /* main */
@@ -270,13 +262,19 @@ int main(void)
     // configure unicode, text color and print title and gameboard
     setlocale(LC_ALL, "en_US.UTF-8");
     printf("\033[97m");
-    print_title_and_gameboard();
+    refresh_screen();
 
     // ask user what to do: shuffle or exit
     printf("\nPress any key to shuffle or ESC to quit: ");
     int option = getch();
     if (option != 27)
     {
+
+        // if option is a special key, you must call it again to retrieve the extra value
+        if (option == 0 || option == 224)
+        {
+            option = getch();
+        }
 
         // shuffle board
         printf("\nShuffling...");
@@ -290,6 +288,12 @@ int main(void)
         option = getch();
         if (option != 27)
         {
+
+            // if option is a special key, you must call it again to retrieve the extra value
+            if (option == 0 || option == 224)
+            {
+                option = getch();
+            }
 
             // start time
             time_t start_time = time(NULL);
